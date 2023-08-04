@@ -1,5 +1,4 @@
--- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2023-06-06 16:26:19.492
+-- https://dbdiagram.io/d/64c2307c02bd1c4a5ec8e869
 
 -- tables
 -- Table: attachments
