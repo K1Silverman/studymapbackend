@@ -32,7 +32,8 @@ public class UserService {
 	
 	public Boolean checkEmailAddressExists(String eMail) {
 		
-		Optional<User> user = userRepository.findUserBy(eMail);
+		String email = eMail.toLowerCase().strip();
+		Optional<User> user = userRepository.findUserBy(email);
 		
 		return user.isPresent();
 	}
@@ -42,7 +43,7 @@ public class UserService {
 		UserDto newUser = new UserDto();
 		newUser.setFirstName(user.getFirstName());
 		newUser.setLastName(user.getLastName());
-		newUser.setEmail(user.getEmail());
+		newUser.setEmail(user.getEmail().toLowerCase().strip());
 		newUser.setPw(user.getPassword());
 		newUser.setRole("User");
 		newUser.setStatus("Active");
