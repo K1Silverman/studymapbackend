@@ -52,17 +52,18 @@ public class UserService {
 		userRepository.save(userEntity);
 	}
 
-	public LoginResponse findUserAndAuthenticate(UserDto loginUserDto) {
-		User loginUserEntity = userMapper.toEntity(loginUserDto);
-		Optional<User> user = userRepository.findUserBy(loginUserEntity.getEmail());
+	public LoginResponse findUserAndAuthenticate(String email, String password) {
+		Optional<User> user = userRepository.findUserBy(email);
 		if (user.isPresent()) {
 			User foundUser = user.get();
-			if (loginUserEntity.getPw() == foundUser.getPw()) {
+			if (password.equals(foundUser.getPw())) {
 				LoginResponse loginResponse = new LoginResponse();
+				loginResponse.setId(foundUser.getId());
 				loginResponse.setFirstName(foundUser.getFirstname());
 				loginResponse.setLastName(foundUser.getLastname());
 				loginResponse.setEMail(foundUser.getEmail());
 				loginResponse.setRole(foundUser.getRole());
+				loginResponse.setStatus(foundUser.getStatus());
 				
 				return loginResponse;
 			} else {
