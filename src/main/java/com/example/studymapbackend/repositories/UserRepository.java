@@ -10,4 +10,5 @@ import com.example.studymapbackend.entities.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query("select u from User u where u.email = ?1")
 	Optional<User> findUserBy(String email);
+	
 }

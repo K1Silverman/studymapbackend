@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.studymapbackend.dtos.LoginResponse;
 import com.example.studymapbackend.dtos.RegisterUserDto;
-import com.example.studymapbackend.dtos.UserDto;
 import com.example.studymapbackend.services.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,8 +23,8 @@ public class UserController {
   
 	@GetMapping("/user/login")
 	@Operation(summary = "Login authetication", description = "Checks if there is an user with inserted e-mail address and password")
-	public LoginResponse findUserAndAuthenticate(@RequestParam UserDto user) {
-		return userService.findUserAndAuthenticate(user);
+	public LoginResponse findUserAndAuthenticate(@RequestParam String email, @RequestParam String password) {
+		return userService.findUserAndAuthenticate(email, password);
 	}
   
 	@PostMapping("/user")
