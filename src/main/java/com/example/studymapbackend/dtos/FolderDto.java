@@ -10,6 +10,8 @@ public class FolderDto {
 	
 	private String folderName;
 	
+	private Integer position;
+	
 	private String status;
 	
 	private Integer userId;

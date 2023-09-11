@@ -19,6 +19,10 @@ public class Folder {
 	private String foldername;
 	
 	@NotNull
+	@Column(name = "position", nullable = false)
+	private Integer position;
+	
+	@NotNull
 	@Column(name = "status", nullable = false)
 	private String status;
 	

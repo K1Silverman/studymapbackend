@@ -17,6 +17,7 @@ public interface FolderMapper {
 	
 	@Mapping(source = "id", target = "id")
 	@Mapping(source = "foldername", target = "folderName")
+	@Mapping(source = "position", target = "position")
 	@Mapping(source = "status", target = "status")
 	@Mapping(source = "user_id", target = "userId")
 	FolderDto toDto(Folder folder);
@@ -24,6 +25,7 @@ public interface FolderMapper {
 	
 	@Mapping(source = "id", target = "id")
 	@Mapping(source = "folderName", target = "foldername")
+	@Mapping(source = "position", target = "position")
 	@Mapping(source = "status", target = "status")
 	@Mapping(source = "userId", target = "user_id")
 	Folder toEntity(FolderDto folder);

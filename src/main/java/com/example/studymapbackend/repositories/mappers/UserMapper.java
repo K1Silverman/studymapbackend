@@ -5,8 +5,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
-import com.example.studymapbackend.dtos.UserDto;
-import com.example.studymapbackend.entities.User;
+import com.example.studymapbackend.dtos.user.LoginRequestDto;
+import com.example.studymapbackend.dtos.user.UserDto;
+import com.example.studymapbackend.entities.user.User;
 
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
@@ -29,4 +30,6 @@ public interface UserMapper {
 	@Mapping(source = "role", target = "role")
 	@Mapping(source = "status", target = "status")
 	User toEntity(UserDto user);
+	User toEntity(LoginRequestDto user);
+	
 }

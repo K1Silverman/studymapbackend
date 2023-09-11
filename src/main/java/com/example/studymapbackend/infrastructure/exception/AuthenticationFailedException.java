@@ -1,5 +1,7 @@
 package com.example.studymapbackend.infrastructure.exception;
 
+import org.springframework.http.HttpStatus;
+
 import com.example.studymapbackend.infrastructure.error.CustomError;
 
 import lombok.Data;
@@ -10,9 +12,11 @@ import lombok.EqualsAndHashCode;
 @Data
 public class AuthenticationFailedException extends RuntimeException {
 	
+	private HttpStatus code;
+	
 	private String message;
-	private String code;
-		
+
+//		
 	public AuthenticationFailedException(CustomError error) {
 	
 		super(error.getMessage());

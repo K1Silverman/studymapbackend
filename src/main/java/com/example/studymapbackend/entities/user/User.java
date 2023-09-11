@@ -1,4 +1,4 @@
-package com.example.studymapbackend.entities;
+package com.example.studymapbackend.entities.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

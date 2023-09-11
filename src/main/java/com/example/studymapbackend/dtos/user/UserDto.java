@@ -1,4 +1,4 @@
-package com.example.studymapbackend.dtos;
+package com.example.studymapbackend.dtos.user;
 
 import lombok.Data;
 
