@@ -1,9 +1,9 @@
-package com.example.studymapbackend.dtos;
+package com.example.studymapbackend.dtos.user;
 
 import lombok.Data;
 
 @Data
-public class LoginResponse {
+public class LoginResponseDto {
 	private Integer id;
 	
 	private String firstName;
@@ -15,4 +15,6 @@ public class LoginResponse {
 	private String role;
 	
 	private String status;
+	
+	private String sessionHash;
 }

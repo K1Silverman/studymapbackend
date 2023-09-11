@@ -1,6 +1,5 @@
 package com.example.studymapbackend.infrastructure;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,9 +15,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler{
 	public ResponseEntity<ApiError> handleDataNotFoundException(AuthenticationFailedException exception) {
 		
 		ApiError apiError = new ApiError();
-		apiError.setMessage(exception.getMessage());
 		apiError.setErrorCode(exception.getCode());
+		apiError.setMessage(exception.getMessage());
+
 		
-		return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<>(apiError, exception.getCode());
 	}
 }

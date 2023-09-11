@@ -24,7 +24,7 @@ public class ContentController {
 	
 	@PostMapping("/content/folder")
 	@Operation(summary = "Adds new folder to user", description = "Creates a new row in db for users's folders")
-	public void addFolder(String folderName, Integer userId) {
-		contentService.addFolder(folderName, userId);
+	public List<FolderDto> addFolder(@RequestBody FolderDto newFolderDto) {
+		return contentService.addFolder(newFolderDto);
 	}
 }

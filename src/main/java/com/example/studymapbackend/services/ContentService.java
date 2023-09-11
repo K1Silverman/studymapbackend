@@ -26,20 +26,40 @@ public class ContentService {
 	}
 
 	public List<FolderDto> getAllUserFolders(Integer userId) {
-		//TODO: Kui folderid puuduvad, siis saada exception teise response koodiga
-		//		
 		List<Folder> userFolders = folderRepository.getAllUserFolders(userId);
-		System.out.println("userFolders: " + userFolders);
 		List<FolderDto> userFoldersDtos = folderMapper.toDtos(userFolders);
-		System.out.println("userFolderDTOS: " + userFoldersDtos);
 		return userFoldersDtos;
 	}
 
-	public void addFolder(String folderName, Integer userId) {
+	public List<FolderDto> addFolder(FolderDto newFolderDto) {
 		Folder newFolder = new Folder();
-		newFolder.setFoldername(folderName);
-		newFolder.setUser_id(userId);
+		newFolder.setFoldername(newFolderDto.getFolderName());
+		newFolder.setPosition(getLastPosition(newFolderDto.getUserId()));
+		newFolder.setUser_id(newFolderDto.getUserId());
 		newFolder.setStatus("Active");
+		System.out.println("New Folder: " + newFolder);
+		folderRepository.save(newFolder);
+		List<FolderDto> allFolders = folderMapper.toDtos(folderRepository.getAllUserFolders(newFolderDto.getUserId()));
+		return allFolders;
+	}
+	
+	private Integer getLastPosition(Integer userId) {
+		List<Folder> userFolders = folderRepository.getAllUserFolders(userId);
+		Integer lastPosition = 0;
+		for (Folder folder: userFolders) {
+			if (folder.getPosition() > lastPosition) {
+				lastPosition = folder.getPosition();
+			}
+		}
+		return lastPosition;
+	}
+
+	public void createDefaultFolder(Integer userId) {
+		Folder newFolder = new Folder();
+		newFolder.setFoldername("Unfoldered subjects");
+		newFolder.setPosition(0);
+		newFolder.setUser_id(userId);
+		newFolder.setStatus("Default");
 		folderRepository.save(newFolder);
 	}
 
