@@ -17,4 +17,10 @@ public interface SubjectMapper {
 	@Mapping(source = "themeId", target = "theme.id")
 	@Mapping(source = "status", target = "status")
 	SubjectDto toDto(Subject subject);
+
+	@Mapping(source = "id", target = "id")
+	@Mapping(source = "name", target = "name")
+	@Mapping(source = "theme.id", target = "themeId")
+	@Mapping(source = "status", target = "status")
+	Subject toEntity (SubjectDto subject);
 }

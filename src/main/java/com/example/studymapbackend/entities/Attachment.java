@@ -11,21 +11,21 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "subject")
-public class Subject {
-
+@Table(name = "attachments")
+public class Attachment {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Integer id;
 	
 	@NotNull
-	@Column(name = "name", nullable = false)
-	private String name;
+	@Column(name = "body", nullable = false)
+	private String body;
 	
 	@NotNull
-	@Column(name = "theme_id", nullable = false)
-	private Theme theme;
+	@Column(name = "post_id", nullable = false)
+	private Post post;
 
 	@NotNull
 	@Column(name = "status", nullable = false)

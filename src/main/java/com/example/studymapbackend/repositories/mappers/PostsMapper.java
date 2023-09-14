@@ -1,4 +1,4 @@
-package com.example.studymapbackend.services;
+package com.example.studymapbackend.repositories.mappers;
 
 import java.util.List;
 
@@ -20,9 +20,9 @@ public interface PostsMapper {
 	@Mapping(source = "position", target = "position")	
 	@Mapping(source = "timestamp", target = "timestamp")
 	@Mapping(source = "subjectId", target = "subject.id")
-	@Mapping(source = "ownerId", target = "ownerId")
+	@Mapping(source = "ownerId", target = "owner.id")
 	@Mapping(source = "status", target = "status")
-	@Mapping(source = "folderId", target = "folderId")
+	@Mapping(source = "folderId", target = "folder.id")
 	PostDto toDto(Post post);
 	List<PostDto> toDtos(List<Post> posts);
 	
@@ -31,9 +31,9 @@ public interface PostsMapper {
 	@Mapping(source = "position", target = "position")	
 	@Mapping(source = "timestamp", target = "timestamp")
 	@Mapping(source = "subject.id", target = "subjectId")
-	@Mapping(source = "ownerId", target = "ownerId")
+	@Mapping(source = "owner.id", target = "ownerId")
 	@Mapping(source = "status", target = "status")
-	@Mapping(source = "folderId", target = "folderId")
+	@Mapping(source = "folder.id", target = "folderId")
 	Post toEntity(PostDto post);
 	
 }

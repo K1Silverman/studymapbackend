@@ -1,20 +1,28 @@
 package com.example.studymapbackend.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.studymapbackend.dtos.AttachmentDto;
 import com.example.studymapbackend.dtos.FolderDto;
 import com.example.studymapbackend.dtos.PostDto;
 import com.example.studymapbackend.dtos.SubjectDto;
 import com.example.studymapbackend.dtos.ThemeDto;
+import com.example.studymapbackend.entities.Attachment;
 import com.example.studymapbackend.entities.Folder;
 import com.example.studymapbackend.entities.Post;
+import com.example.studymapbackend.entities.Subject;
+import com.example.studymapbackend.entities.Theme;
+import com.example.studymapbackend.repositories.AttachmentRepository;
 import com.example.studymapbackend.repositories.FolderRepository;
 import com.example.studymapbackend.repositories.PostsRepository;
 import com.example.studymapbackend.repositories.SubjectRepository;
 import com.example.studymapbackend.repositories.ThemeRepository;
+import com.example.studymapbackend.repositories.mappers.AttachmentMapper;
 import com.example.studymapbackend.repositories.mappers.FolderMapper;
+import com.example.studymapbackend.repositories.mappers.PostsMapper;
 import com.example.studymapbackend.repositories.mappers.SubjectMapper;
 import com.example.studymapbackend.repositories.mappers.ThemeMapper;
 
@@ -46,6 +54,12 @@ public class ContentService {
 	
 	@Resource
 	private ThemeMapper themeMapper;
+	
+	@Resource
+	private AttachmentRepository attachmentRepository;
+	
+	@Resource
+	private AttachmentMapper attachmentMapper;
 	
 	public List<FolderDto> getAllUserFolders(Integer userId) {
 		List<Folder> userFolders = folderRepository.getAllUserFolders(userId);
@@ -100,8 +114,30 @@ public class ContentService {
 	}
 
 	public void savePost(PostDto post) {
-		// TODO Auto-generated method stub
 		
+		Post postEntity = new Post();
+		SubjectDto subjectDto = post.getSubject();
+		Subject subjectEntity = subjectMapper.toEntity(subjectDto);
+		ThemeDto themeDto = subjectDto.getTheme();
+
+
+		if (themeDto.getStatus().equals("Default")) {
+			subjectEntity.setTheme(themeRepository.getDefaultTheme());
+		} else if (themeDto.getStatus().equals("Active")) {
+			subjectEntity.setTheme(themeRepository.getReferenceById(themeDto.getId()));
+		} else {
+			subjectEntity.setTheme(themeRepository.save(themeMapper.toEntity(themeDto)));
+		}
+		
+		
+		List<AttachmentDto> attachmentsDtos = post.getAttachments();
+		List<Attachment> attachments = new ArrayList<Attachment>();
+		
+		for(AttachmentDto attachmentDto : attachmentsDtos) {
+			if (attachmentDto.getId() != null) {
+				attachments.add(attachmentMapper.toEntity(attachmentDto));
+			}
+		}
 	}
 
 }

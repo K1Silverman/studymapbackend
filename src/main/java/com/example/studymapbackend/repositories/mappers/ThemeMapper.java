@@ -20,5 +20,13 @@ public interface ThemeMapper {
 	@Mapping(source = "buttonsColor", target = "buttonsColor")
 	@Mapping(source = "status", target = "status")
 	ThemeDto toDto(Theme theme);
+	
+	@Mapping(source = "id", target = "id")
+	@Mapping(source = "name", target = "name")
+	@Mapping(source = "firstColor", target = "firstColor")
+	@Mapping(source = "secondaryColor", target = "secondaryColor")
+	@Mapping(source = "buttonsColor", target = "buttonsColor")
+	@Mapping(source = "status", target = "status")
+	Theme toEntity(ThemeDto theme);
 
 }

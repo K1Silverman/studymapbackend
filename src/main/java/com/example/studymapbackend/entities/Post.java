@@ -2,6 +2,8 @@ package com.example.studymapbackend.entities;
 
 import java.time.Instant;
 
+import com.example.studymapbackend.entities.user.User;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,11 +37,11 @@ public class Post {
 	
 	@NotNull
 	@Column(name = "subject_id", nullable = false)
-	private Integer subjectId;
+	private Subject subject;
 	
 	@NotNull
 	@Column(name = "owner_id", nullable = false)
-	private Integer ownerId;
+	private User owner;
 	
 	@NotNull
 	@Column(name = "status", nullable = false)
@@ -47,6 +49,6 @@ public class Post {
 	
 	@NotNull
 	@Column(name = "folder_id", nullable = false)
-	private Integer folderId;
+	private Folder folder;
 		
 }
