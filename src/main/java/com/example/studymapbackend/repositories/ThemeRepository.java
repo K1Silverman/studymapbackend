@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.studymapbackend.entities.Theme;
 
 public interface ThemeRepository extends JpaRepository<Theme, Integer> {
-	@Query("select t from Themes t where t.status = 'Default'")
+	@Query("select t from Theme t where t.status = 'Default'")
 	Theme getDefaultTheme();
 }

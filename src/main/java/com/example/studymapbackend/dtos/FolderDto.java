@@ -2,7 +2,6 @@ package com.example.studymapbackend.dtos;
 
 import lombok.Data;
 
-@SuppressWarnings("unused")
 @Data
 public class FolderDto {
 	

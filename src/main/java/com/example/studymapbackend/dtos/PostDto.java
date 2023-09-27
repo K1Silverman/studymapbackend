@@ -1,14 +1,13 @@
 package com.example.studymapbackend.dtos;
 
-import java.util.List;
-
 import lombok.Data;
 
-@SuppressWarnings("unused")
 @Data
 public class PostDto {
 	
 	private Integer id;
+
+	private String subject;
 	
 	private String body;
 	
@@ -16,13 +15,8 @@ public class PostDto {
 	
 	private String timestamp;
 	
-	private SubjectDto subject;
-	
-	private List<AttachmentDto> attachments;
-	
-	private Integer ownerId;
+	private Integer chapterId;
 	
 	private String status;
-	
-	private Integer folderId;
+
 }

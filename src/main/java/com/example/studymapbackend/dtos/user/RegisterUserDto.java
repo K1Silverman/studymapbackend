@@ -2,7 +2,6 @@ package com.example.studymapbackend.dtos.user;
 
 import lombok.Data;
 
-@SuppressWarnings("unused")
 @Data
 public class RegisterUserDto {
 	

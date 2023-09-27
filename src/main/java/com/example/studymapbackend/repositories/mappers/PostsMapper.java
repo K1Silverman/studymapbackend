@@ -16,24 +16,22 @@ public interface PostsMapper {
 	PostsMapper INSTANCE = Mappers.getMapper(PostsMapper.class);
 	
 	@Mapping(source = "id", target = "id")
+	@Mapping(source = "subject", target = "subject")
 	@Mapping(source = "body", target = "body")
 	@Mapping(source = "position", target = "position")	
 	@Mapping(source = "timestamp", target = "timestamp")
-	@Mapping(source = "subjectId", target = "subject.id")
-	@Mapping(source = "ownerId", target = "owner.id")
+	@Mapping(source = "chapterId", target = "chapterId")
 	@Mapping(source = "status", target = "status")
-	@Mapping(source = "folderId", target = "folder.id")
 	PostDto toDto(Post post);
 	List<PostDto> toDtos(List<Post> posts);
-	
+
 	@Mapping(source = "id", target = "id")
+	@Mapping(source = "subject", target = "subject")
 	@Mapping(source = "body", target = "body")
-	@Mapping(source = "position", target = "position")	
+	@Mapping(source = "position", target = "position")
 	@Mapping(source = "timestamp", target = "timestamp")
-	@Mapping(source = "subject.id", target = "subjectId")
-	@Mapping(source = "owner.id", target = "ownerId")
+	@Mapping(source = "chapterId", target = "chapterId")
 	@Mapping(source = "status", target = "status")
-	@Mapping(source = "folder.id", target = "folderId")
 	Post toEntity(PostDto post);
 	
 }

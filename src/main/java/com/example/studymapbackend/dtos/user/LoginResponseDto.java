@@ -12,7 +12,7 @@ public class LoginResponseDto {
 	
 	private String eMail;
 	
-	private String role;
+	private String roleName;
 	
 	private String status;
 	

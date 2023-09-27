@@ -16,7 +16,7 @@ public class Folder {
 	
 	@NotNull
 	@Column(name = "foldername", nullable = false)
-	private String foldername;
+	private String folderName;
 	
 	@NotNull
 	@Column(name = "position", nullable = false)
@@ -28,6 +28,6 @@ public class Folder {
 	
 	@NotNull
 	@Column(name = "user_id", nullable = false)
-	private Integer user_id;
+	private Integer userId;
 	
 }

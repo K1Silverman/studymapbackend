@@ -14,20 +14,22 @@ import com.example.studymapbackend.entities.user.User;
 public interface UserMapper {
 	
 	UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
-	
+
+	@Mapping(source = "id", target = "id")
 	@Mapping(source = "firstname", target = "firstName")
 	@Mapping(source = "lastname", target = "lastName")
 	@Mapping(source = "pw", target = "pw")
 	@Mapping(source = "email", target = "email")
-	@Mapping(source = "role", target = "role")
+	@Mapping(source = "role.id", target = "role.id")
 	@Mapping(source = "status", target = "status")
 	UserDto toDto(User user);
-	
+
+	@Mapping(source = "id", target = "id")
 	@Mapping(source = "firstName", target = "firstname")
 	@Mapping(source = "lastName", target = "lastname")
 	@Mapping(source = "pw", target = "pw")
 	@Mapping(source = "email", target = "email")
-	@Mapping(source = "role", target = "role")
+	@Mapping(source = "role.id", target = "role.id")
 	@Mapping(source = "status", target = "status")
 	User toEntity(UserDto user);
 	User toEntity(LoginRequestDto user);

@@ -1,143 +1,171 @@
 package com.example.studymapbackend.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import com.example.studymapbackend.dtos.AttachmentDto;
-import com.example.studymapbackend.dtos.FolderDto;
-import com.example.studymapbackend.dtos.PostDto;
-import com.example.studymapbackend.dtos.SubjectDto;
-import com.example.studymapbackend.dtos.ThemeDto;
-import com.example.studymapbackend.entities.Attachment;
+import com.example.studymapbackend.dtos.*;
+import com.example.studymapbackend.entities.Chapter;
 import com.example.studymapbackend.entities.Folder;
 import com.example.studymapbackend.entities.Post;
-import com.example.studymapbackend.entities.Subject;
 import com.example.studymapbackend.entities.Theme;
-import com.example.studymapbackend.repositories.AttachmentRepository;
-import com.example.studymapbackend.repositories.FolderRepository;
-import com.example.studymapbackend.repositories.PostsRepository;
-import com.example.studymapbackend.repositories.SubjectRepository;
-import com.example.studymapbackend.repositories.ThemeRepository;
-import com.example.studymapbackend.repositories.mappers.AttachmentMapper;
-import com.example.studymapbackend.repositories.mappers.FolderMapper;
-import com.example.studymapbackend.repositories.mappers.PostsMapper;
-import com.example.studymapbackend.repositories.mappers.SubjectMapper;
-import com.example.studymapbackend.repositories.mappers.ThemeMapper;
-
+import com.example.studymapbackend.repositories.*;
+import com.example.studymapbackend.repositories.mappers.*;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ContentService {
 
-	@Resource
-	private FolderRepository folderRepository;
+    @Resource
+    private FolderRepository folderRepository;
 
-	@Resource
-	private FolderMapper folderMapper;
-	
-	@Resource
-	private PostsRepository postsRepository;
-	
-	@Resource
-	private PostsMapper postsMapper;
-	
-	@Resource
-	private SubjectRepository subjectRepository;
-	
-	@Resource
-	private SubjectMapper subjectMapper;
+    @Resource
+    private FolderMapper folderMapper;
 
-	@Resource
-	private ThemeRepository themeRepository;
-	
-	@Resource
-	private ThemeMapper themeMapper;
-	
-	@Resource
-	private AttachmentRepository attachmentRepository;
-	
-	@Resource
-	private AttachmentMapper attachmentMapper;
-	
-	public List<FolderDto> getAllUserFolders(Integer userId) {
-		List<Folder> userFolders = folderRepository.getAllUserFolders(userId);
-		List<FolderDto> userFoldersDtos = folderMapper.toDtos(userFolders);
-		return userFoldersDtos;
-	}
+    @Resource
+    private PostsRepository postsRepository;
 
-	public List<FolderDto> addFolder(FolderDto newFolderDto) {
-		Folder newFolder = new Folder();
-		newFolder.setFoldername(newFolderDto.getFolderName());
-		newFolder.setPosition(getLastPosition(newFolderDto.getUserId()));
-		newFolder.setUser_id(newFolderDto.getUserId());
-		newFolder.setStatus("Active");
-		System.out.println("New Folder: " + newFolder);
-		folderRepository.save(newFolder);
-		List<FolderDto> allFolders = folderMapper.toDtos(folderRepository.getAllUserFolders(newFolderDto.getUserId()));
-		return allFolders;
-	}
-	
-	private Integer getLastPosition(Integer userId) {
-		List<Folder> userFolders = folderRepository.getAllUserFolders(userId);
-		Integer lastPosition = 0;
-		for (Folder folder: userFolders) {
-			if (folder.getPosition() > lastPosition) {
-				lastPosition = folder.getPosition();
-			}
-		}
-		return lastPosition;
-	}
+    @Resource
+    private PostsMapper postsMapper;
 
-	public void createDefaultFolder(Integer userId) {
-		Folder newFolder = new Folder();
-		newFolder.setFoldername("Unfoldered subjects");
-		newFolder.setPosition(0);
-		newFolder.setUser_id(userId);
-		newFolder.setStatus("Default");
-		folderRepository.save(newFolder);
-	}
+    @Resource
+    private ThemeRepository themeRepository;
 
-	public List<PostDto> getAllPostsInFolder(Integer userId, Integer folderId) {
-		List<Post> activeFolderPosts = postsRepository.getAllFolderActivePosts(userId, folderId);
-		List<PostDto> activeFolderPostsDtos = postsMapper.toDtos(activeFolderPosts);
-		for (PostDto post : activeFolderPostsDtos) {
-			Integer subjectId = post.getSubject().getId();
-			SubjectDto subject = subjectMapper.toDto(subjectRepository.findById(subjectId).get());
-			Integer themeId = subject.getTheme().getId();
-			ThemeDto theme = themeMapper.toDto(themeRepository.getReferenceById(themeId));
-			subject.setTheme(theme);
-			post.setSubject(subject);
-		}
-		return activeFolderPostsDtos;
-	}
+    @Resource
+    private ThemeMapper themeMapper;
 
-	public void savePost(PostDto post) {
-		
-		Post postEntity = new Post();
-		SubjectDto subjectDto = post.getSubject();
-		Subject subjectEntity = subjectMapper.toEntity(subjectDto);
-		ThemeDto themeDto = subjectDto.getTheme();
+    @Resource
+    private AttachmentRepository attachmentRepository;
 
+    @Resource
+    private AttachmentMapper attachmentMapper;
 
-		if (themeDto.getStatus().equals("Default")) {
-			subjectEntity.setTheme(themeRepository.getDefaultTheme());
-		} else if (themeDto.getStatus().equals("Active")) {
-			subjectEntity.setTheme(themeRepository.getReferenceById(themeDto.getId()));
-		} else {
-			subjectEntity.setTheme(themeRepository.save(themeMapper.toEntity(themeDto)));
-		}
-		
-		
-		List<AttachmentDto> attachmentsDtos = post.getAttachments();
-		List<Attachment> attachments = new ArrayList<Attachment>();
-		
-		for(AttachmentDto attachmentDto : attachmentsDtos) {
-			if (attachmentDto.getId() != null) {
-				attachments.add(attachmentMapper.toEntity(attachmentDto));
-			}
-		}
-	}
+    @Resource
+    private ChapterRepository chapterRepository;
 
+    @Resource
+    private ChapterMapper chapterMapper;
+
+    @Autowired
+    public ContentService(FolderRepository folderRepository, FolderMapper folderMapper, PostsRepository postsRepository, PostsMapper postsMapper, ThemeRepository themeRepository, ThemeMapper themeMapper, AttachmentRepository attachmentRepository, AttachmentMapper attachmentMapper, ChapterRepository chapterRepository, ChapterMapper chapterMapper) {
+        this.folderRepository = folderRepository;
+        this.folderMapper = folderMapper;
+        this.postsRepository = postsRepository;
+        this.postsMapper = postsMapper;
+        this.themeRepository = themeRepository;
+        this.themeMapper = themeMapper;
+        this.attachmentRepository = attachmentRepository;
+        this.attachmentMapper = attachmentMapper;
+        this.chapterRepository = chapterRepository;
+        this.chapterMapper = chapterMapper;
+    }
+
+    public List<FolderDto> getAllUserFolders(Integer userId) {
+        List<Folder> userFolders = folderRepository.getAllUserFolders(userId);
+        return folderMapper.toDtos(userFolders);
+    }
+
+    public List<FolderDto> addFolder(FolderDto newFolderDto) {
+        Folder newFolder = folderMapper.toEntity(newFolderDto);
+        newFolder.setPosition(getLastPositionOfFolder(newFolderDto.getUserId()));
+        newFolder.setStatus("Active");
+        folderRepository.save(newFolder);
+        System.out.println("New Folder: " + newFolder);
+        return folderMapper.toDtos(folderRepository.getAllUserFolders(newFolderDto.getUserId()));
+    }
+
+    private Integer getLastPositionOfFolder(Integer userId) {
+        List<Folder> userFolders = folderRepository.getAllUserFolders(userId);
+        Integer lastPosition = 0;
+        for (Folder folder : userFolders) {
+            if (folder.getPosition() > lastPosition) {
+                lastPosition = folder.getPosition();
+            }
+        }
+        return lastPosition;
+    }
+
+    private Integer getLastPositionOfChapter(Integer folderId) {
+        List<Chapter> folderChapters = chapterRepository.getAllChaptersInFolder(folderId);
+        Integer lastPosition = 0;
+        for (Chapter chapter : folderChapters) {
+            if (chapter.getPosition() > lastPosition) {
+                lastPosition = chapter.getPosition();
+            }
+        }
+        return lastPosition;
+    }
+
+    private Integer getLastPositionOfPost(Integer chapterId) {
+        List<Post> userFolders = postsRepository.getAllChapterActivePosts(chapterId);
+        Integer lastPosition = 0;
+        for (Post post : userFolders) {
+            if (post.getPosition() > lastPosition) {
+                lastPosition = post.getPosition();
+            }
+        }
+        return lastPosition;
+    }
+
+    public void createDefaultFolder(Integer userId) {
+        Folder newFolder = new Folder();
+        newFolder.setFolderName("Unfoldered subjects");
+        newFolder.setPosition(0);
+        newFolder.setUserId(userId);
+        newFolder.setStatus("Default");
+        folderRepository.save(newFolder);
+    }
+
+    public List<ChapterDto> getAllChaptersInFolder(Integer folderId) {
+        return getAllChaptersWithContent(folderId);
+    }
+
+    private List<ChapterDto> getAllChaptersWithContent(Integer folderId) {
+        List<Chapter> chaptersInFolder = chapterRepository.getAllChaptersInFolder(folderId);
+        List<ChapterDto> chaptersInFolderDto = chapterMapper.toDtos(chaptersInFolder);
+        for (ChapterDto chapter : chaptersInFolderDto) {
+            List<Post> chapterPosts = postsRepository.getAllChapterActivePosts(chapter.getId());
+            List<PostDto> chapterPostsDtos = postsMapper.toDtos(chapterPosts);
+            chapter.setPosts(chapterPostsDtos);
+        }
+        return chaptersInFolderDto;
+    }
+
+    public List<ChapterDto> saveNewChapter(ChapterDto chapterDto) {
+        if (chapterDto.getPosition() == null || chapterDto.getPosition() < 1) {
+            chapterDto.setPosition(getLastPositionOfChapter(chapterDto.getFolderId()));
+            Chapter newChapter = chapterRepository.save(chapterMapper.toEntity(chapterDto));
+            return getAllChaptersInFolder(newChapter.getFolderId());
+        } else {
+            Chapter newChapter = chapterRepository.save(chapterMapper.toEntity(chapterDto));
+            return getAllChaptersInFolder(newChapter.getFolderId());
+        }
+    }
+
+    public PostDto savePost(PostDto postDto, List<AttachmentDto> attachments) {
+        if (attachments.isEmpty()) {
+            if (postDto.getPosition() == null || postDto.getPosition() < 1) {
+                postDto.setPosition(getLastPositionOfPost(postDto.getChapterId()));
+                Post newPost = postsRepository.save(postsMapper.toEntity(postDto));
+                return postsMapper.toDto(newPost);
+            } else {
+                Post newPost = postsRepository.save(postsMapper.toEntity(postDto));
+                return postsMapper.toDto(newPost);
+            }
+        }
+        // List<Attachment> newAttachments = attachmentMapper.toEntities(attachments);
+        // TODO: Saving attachments functionality
+        return null;
+    }
+
+    public Integer saveTheme(ThemeDto themeDto) {
+        Theme newTheme = themeRepository.save(themeMapper.toEntity(themeDto));
+        return newTheme.getId();
+    }
+
+    public Boolean validateFolderOwner(Integer userId, Integer folderId) {
+        Optional<Folder> folder = folderRepository.validateFolderOwner(folderId, userId);
+        return folder.isPresent();
+    }
 }

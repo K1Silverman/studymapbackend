@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.studymapbackend.entities.Post;
 
 public interface PostsRepository extends JpaRepository<Post, Integer>{
-	@Query("select p from Post p where p.ownerId = ?1 and p.folderId = ?2")
-	List<Post> getAllFolderActivePosts(Integer userId, Integer folderId);
+	@Query("select p from Post p where p.chapterId = ?1 and p.status = 'Active' order by p.position asc")
+			List<Post>getAllChapterActivePosts(Integer chapterId);
 }
