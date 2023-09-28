@@ -13,3 +13,5 @@ INSERT INTO public.folders (foldername,"position",status,user_id) VALUES
 	 ('Unfoldered subjects',0,'Default',4),
 	 ('asdf',0,'Active',3);
 
+INSERT INTO public.themes (name, first_color, secondary_color, buttons_color, status) VALUES
+    ('Default Theme', '#93c5fd', '#6366f1', 'invert', 'Default')

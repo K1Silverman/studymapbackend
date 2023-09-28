@@ -42,7 +42,7 @@ public class ContentController {
     @PostMapping("/content/folder/chapter")
     @Operation(summary = "Add new chapter to folder", description = "Creates new chapter in database. Returns all chapters inside folder")
     public List<ChapterDto> addChapter(@RequestBody ChapterDto newChapterDto) {
-        return contentService.saveNewChapter(newChapterDto);
+        return contentService.saveChapter(newChapterDto);
     }
     @PostMapping("/content/folder/chapter/post")
     @Operation(summary = "Saves post to folder", description = "Saves post to folder with theme and subject.")

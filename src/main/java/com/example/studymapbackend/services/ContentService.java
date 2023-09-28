@@ -132,15 +132,27 @@ public class ContentService {
         return chaptersInFolderDto;
     }
 
-    public List<ChapterDto> saveNewChapter(ChapterDto chapterDto) {
+    public List<ChapterDto> saveChapter(ChapterDto chapterDto) {
+        if (chapterDto.getName() == null || chapterDto.getName().trim().isEmpty()) {
+            List<Chapter> chaptersInSameFolder = chapterRepository.getAllChaptersInFolder(chapterDto.getFolderId());
+            int unnamedChaptersCount = 0;
+            for (Chapter chapter : chaptersInSameFolder) {
+                if (chapter.getName().startsWith("Unnamed Chapter")) {
+                    unnamedChaptersCount++;
+                }
+            }
+            unnamedChaptersCount++;
+            chapterDto.setName(String.format("Unnamed Chapter (%d)", unnamedChaptersCount));
+        }
+        if (chapterDto.getTheme() == null) {
+            chapterDto.setTheme(themeMapper.toDto(themeRepository.getDefaultTheme()));
+        }
         if (chapterDto.getPosition() == null || chapterDto.getPosition() < 1) {
             chapterDto.setPosition(getLastPositionOfChapter(chapterDto.getFolderId()));
-            Chapter newChapter = chapterRepository.save(chapterMapper.toEntity(chapterDto));
-            return getAllChaptersInFolder(newChapter.getFolderId());
-        } else {
-            Chapter newChapter = chapterRepository.save(chapterMapper.toEntity(chapterDto));
-            return getAllChaptersInFolder(newChapter.getFolderId());
+
         }
+        Chapter newChapter = chapterRepository.save(chapterMapper.toEntity(chapterDto));
+        return getAllChaptersInFolder(newChapter.getFolderId());
     }
 
     public PostDto savePost(PostDto postDto, List<AttachmentDto> attachments) {
