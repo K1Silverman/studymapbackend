@@ -3,6 +3,8 @@ package com.example.studymapbackend.services;
 import java.time.Instant;
 import java.util.Optional;
 
+import com.example.studymapbackend.repositories.RoleRepository;
+import com.example.studymapbackend.repositories.mappers.RoleMapper;
 import org.springframework.stereotype.Service;
 
 import com.example.studymapbackend.dtos.user.LoginRequestDto;
@@ -39,11 +41,24 @@ public class UserService {
 	
 	@Resource
 	private SessionMapper sessionMapper;
+
+	@Resource
+	private RoleRepository roleRepository;
+
+	@Resource
+	private RoleMapper roleMapper;
 	
 	
-	public UserService(UserRepository userRepository, UserMapper userMapper) {
+	public UserService(UserRepository userRepository, UserMapper userMapper, ContentService contentService,
+					   SessionRepository sessionRepository, SessionMapper sessionMapper, RoleRepository roleRepository,
+					   RoleMapper roleMapper) {
 		this.userRepository = userRepository;
 		this.userMapper = userMapper;
+		this.contentService = contentService;
+		this.sessionRepository = sessionRepository;
+		this.sessionMapper = sessionMapper;
+		this.roleRepository = roleRepository;
+		this.roleMapper = roleMapper;
 	}
 	
 	public Boolean checkEmailAddressExists(String eMail) {
@@ -61,16 +76,16 @@ public class UserService {
 		newUser.setLastName(user.getLastName());
 		newUser.setEmail(user.getEmail().toLowerCase().strip());
 		newUser.setPw(user.getPassword());
-		newUser.setRole("User");
 		newUser.setStatus("Active");
 		
 		User userEntity = userMapper.toEntity(newUser);
+		userEntity.setRole(roleRepository.getRoleBy("User"));
 		User newEntity = userRepository.save(userEntity);
 		Integer newUserId = newEntity.getId();
 		contentService.createDefaultFolder(newUserId);
 	}
 
-	public LoginResponseDto findUserAndAuthenticate(LoginRequestDto loginCredentials) {
+	public LoginResponseDto findUserAndAuthenticate(LoginRequestDto loginCredentials) throws AuthenticationFailedException {
 		
 		Optional<User> user = userRepository.findUserBy(loginCredentials.getEmail());
 		System.out.println("user: " + user);
@@ -102,11 +117,12 @@ public class UserService {
 	
 	private LoginResponseDto setLoginResponseData(User foundUser) {
 		LoginResponseDto loginResponse = new LoginResponseDto();
+
 		loginResponse.setId(foundUser.getId());
 		loginResponse.setFirstName(foundUser.getFirstname());
 		loginResponse.setLastName(foundUser.getLastname());
 		loginResponse.setEMail(foundUser.getEmail());
-		loginResponse.setRole(foundUser.getRole());
+		loginResponse.setRoleName(foundUser.getRole().getName());
 		loginResponse.setStatus(foundUser.getStatus());
 		loginResponse.setSessionHash(setActiveSessionHash(foundUser));
 		
@@ -134,7 +150,7 @@ public class UserService {
 		loginResponse.setFirstName(userDto.getFirstName());
 		loginResponse.setLastName(userDto.getLastName());
 		loginResponse.setEMail(userDto.getEmail());
-		loginResponse.setRole(userDto.getRole());
+		loginResponse.setRoleName(userDto.getRole().getName());
 		loginResponse.setStatus(userDto.getStatus());
 		loginResponse.setSessionHash(setActiveSessionHash(userId, userDto));
 		

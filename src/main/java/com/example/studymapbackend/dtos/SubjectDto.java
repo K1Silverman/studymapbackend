@@ -3,16 +3,13 @@ package com.example.studymapbackend.dtos;
 import lombok.Data;
 
 @Data
-public class FolderDto {
-	
+public class SubjectDto {
+
 	private Integer id;
 	
-	private String folderName;
+	private String name;
 	
-	private Integer position;
+	private ThemeDto theme;
 	
 	private String status;
-	
-	private Integer userId;
-	
 }

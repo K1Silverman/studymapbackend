@@ -31,8 +31,9 @@ public class User {
 	private String email;
 	
 	@NotNull
-	@Column(name = "role", nullable = false)
-	private String role;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "role_id", nullable = false)
+	private Role role;
 	
 	@Column(name = "status")
 	private String status;

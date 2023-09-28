@@ -6,8 +6,8 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "folders")
-public class Folder {
+@Table(name = "attachments")
+public class Attachment {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,19 +15,15 @@ public class Folder {
 	private Integer id;
 	
 	@NotNull
-	@Column(name = "foldername", nullable = false)
-	private String folderName;
+	@Column(name = "body", nullable = false)
+	private String body;
 	
 	@NotNull
-	@Column(name = "position", nullable = false)
-	private Integer position;
-	
+	@Column(name = "post_id", nullable = false)
+	private Integer postId;
+
 	@NotNull
 	@Column(name = "status", nullable = false)
 	private String status;
-	
-	@NotNull
-	@Column(name = "user_id", nullable = false)
-	private Integer userId;
-	
+
 }

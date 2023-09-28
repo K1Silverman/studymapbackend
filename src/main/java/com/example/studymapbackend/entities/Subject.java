@@ -6,28 +6,25 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "folders")
-public class Folder {
-	
+@Table(name = "subject")
+public class Subject {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Integer id;
 	
 	@NotNull
-	@Column(name = "foldername", nullable = false)
-	private String folderName;
+	@Column(name = "name", nullable = false)
+	private String name;
 	
 	@NotNull
-	@Column(name = "position", nullable = false)
-	private Integer position;
-	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "theme_id", nullable = false)
+	private Theme theme;
+
 	@NotNull
 	@Column(name = "status", nullable = false)
 	private String status;
-	
-	@NotNull
-	@Column(name = "user_id", nullable = false)
-	private Integer userId;
-	
+
 }
