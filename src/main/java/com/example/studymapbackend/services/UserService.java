@@ -88,8 +88,6 @@ public class UserService {
 	public LoginResponseDto findUserAndAuthenticate(LoginRequestDto loginCredentials) throws AuthenticationFailedException {
 		
 		Optional<User> user = userRepository.findUserBy(loginCredentials.getEmail());
-		System.out.println("user: " + user);
-		System.out.println("user2: " + user.isPresent());
 		if (user.isPresent()) {
 			User foundUser = user.get();
 			
@@ -101,7 +99,6 @@ public class UserService {
 				throw new AuthenticationFailedException(CustomError.INCORRECT_CREDENTIALS);
 			}
 		} else {
-			System.out.println("j]uab siia?");
 			throw new AuthenticationFailedException(CustomError.USER_DOES_NOT_EXIST);
 		}
 	}

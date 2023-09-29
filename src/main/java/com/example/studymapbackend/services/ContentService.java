@@ -11,6 +11,8 @@ import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,7 +73,6 @@ public class ContentService {
         newFolder.setPosition(getLastPositionOfFolder(newFolderDto.getUserId()));
         newFolder.setStatus("Active");
         folderRepository.save(newFolder);
-        System.out.println("New Folder: " + newFolder);
         return folderMapper.toDtos(folderRepository.getAllUserFolders(newFolderDto.getUserId()));
     }
 
@@ -83,7 +84,7 @@ public class ContentService {
                 lastPosition = folder.getPosition();
             }
         }
-        return lastPosition;
+        return ++lastPosition;
     }
 
     private Integer getLastPositionOfChapter(Integer folderId) {
@@ -94,7 +95,7 @@ public class ContentService {
                 lastPosition = chapter.getPosition();
             }
         }
-        return lastPosition;
+        return ++lastPosition;
     }
 
     private Integer getLastPositionOfPost(Integer chapterId) {
@@ -105,7 +106,7 @@ public class ContentService {
                 lastPosition = post.getPosition();
             }
         }
-        return lastPosition;
+        return ++lastPosition;
     }
 
     public void createDefaultFolder(Integer userId) {
@@ -156,19 +157,22 @@ public class ContentService {
     }
 
     public PostDto savePost(PostDto postDto, List<AttachmentDto> attachments) {
-        if (attachments.isEmpty()) {
-            if (postDto.getPosition() == null || postDto.getPosition() < 1) {
-                postDto.setPosition(getLastPositionOfPost(postDto.getChapterId()));
-                Post newPost = postsRepository.save(postsMapper.toEntity(postDto));
-                return postsMapper.toDto(newPost);
-            } else {
-                Post newPost = postsRepository.save(postsMapper.toEntity(postDto));
-                return postsMapper.toDto(newPost);
-            }
+
+//        LocalDateTime postTimestamp = LocalDateTime.parse(postDto.getTimestamp());
+
+        Post newPost = postsMapper.toEntity(postDto);
+        if (newPost.getPosition() == null || newPost.getPosition() < 1) {
+            newPost.setPosition(getLastPositionOfPost(newPost.getChapterId()));
         }
+//        newPost.setTimestamp(postTimestamp);
+
+        // if (attachments == null || attachments.isEmpty()) {
+        //
+        // }
         // List<Attachment> newAttachments = attachmentMapper.toEntities(attachments);
         // TODO: Saving attachments functionality
-        return null;
+
+        return postsMapper.toDto(postsRepository.save(newPost));
     }
 
     public Integer saveTheme(ThemeDto themeDto) {

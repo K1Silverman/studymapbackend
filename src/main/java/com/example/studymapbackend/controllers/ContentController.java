@@ -46,7 +46,7 @@ public class ContentController {
     }
     @PostMapping("/content/folder/chapter/post")
     @Operation(summary = "Saves post to folder", description = "Saves post to folder with theme and subject.")
-    public PostDto savePost(@RequestBody PostDto post, List<AttachmentDto> attachments) {
+    public PostDto savePost(@RequestBody PostDto post, @RequestBody(required = false) List<AttachmentDto> attachments) {
 
         return contentService.savePost(post, attachments);
     }

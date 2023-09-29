@@ -2,6 +2,8 @@ package com.example.studymapbackend.dtos;
 
 import lombok.Data;
 
+import java.time.Instant;
+
 @Data
 public class PostDto {
 	
@@ -13,7 +15,7 @@ public class PostDto {
 	
 	private Integer position;
 	
-	private String timestamp;
+	private Instant timestamp;
 	
 	private Integer chapterId;
 	
